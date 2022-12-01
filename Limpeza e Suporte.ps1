@@ -1738,18 +1738,29 @@ function main_form {
                         $lb_log.text = 'Coletando esquemas de energia...'
                         $powerscheme = Get-WmiObject -Class win32_powerplan -Namespace root\cimv2\power
                         
-                        $lb_log.text = 'Removendo esquemas de desempenho máximo duplicados...'
+                        #Ativando um esquema de energia "Equilibrado"
+                        foreach ($scheme in $powerscheme) { 
+                            if ($scheme.ElementName -eq "Equilibrado") { 
+                                powercfg /SETACTIVE $scheme.InstanceID.Substring("21", $scheme.InstanceID.Length - 22) 
+                            } 
+                        }
+
+                        #removendo Desempenho máximo duplicado
                         for ($i = 0; $i -lt $powerscheme.Count; $i++) {
                             if ($powerscheme[$i].ElementName -eq "Desempenho Máximo") {
                                 powercfg /delete $powerscheme[$i].InstanceID.Substring("21", $powerscheme[$i].InstanceID.Length - 22)
                             }
                         }
+                    
+                        #Duplicando esquema Desempenho maximo do windows
                         $lb_log.text = 'Criando de desempenho máximo...'
                         powercfg -duplicatescheme e9a42b02-d5df-448d-aa00-03f14749eb61 | Out-Null
                 
+                        #Atualizando tabela
                         $lb_log.text = 'Coletando novas informações...'
                         $powerscheme = Get-WmiObject -Class win32_powerplan -Namespace root\cimv2\power
                 
+                        #Ativando esquema criado
                         $lb_log.text = 'Ativando desempenho máximo...'
                         for ($i = 0; $i -lt $powerscheme.Count; $i++) {
                             if ($powerscheme[$i].ElementName -eq "Desempenho Máximo") {
@@ -2346,88 +2357,7 @@ function main_form {
                 }
                 if ($selected.Contains("Desinstalar OneDrive")) {
 
-                    Start-Job -ScriptBlock {
-
-                        If (Test-Path "$env:USERPROFILE\OneDrive\*") {
-                            $lb_log.text = 'Arquivos do oneDrive encontrados...'
-                            Start-Sleep 1
-                              
-                            If (Test-Path "$env:USERPROFILE\Desktop\OneDriveBackupFiles") {
-                                $lb_log.text = 'Arquivos de backup do oneDrive encontrados...'
-                            }
-                            else {
-                                If (!(Test-Path "$env:USERPROFILE\Desktop\OneDriveBackupFiles")) {
-                                    $lb_log.text = 'Criando Backup do oneDrive...'
-                                    New-item -Path "$env:USERPROFILE\Desktop" -Name "OneDriveBackupFiles"-ItemType Directory -Force
-                                    $lb_log.text = "Successfully created the folder 'OneDriveBackupFiles' on your desktop."
-                                    $lb_log.text = 'Pasta OneDriveBackupFiles criada com sucesso...'
-                                }
-                            }
-                            Start-Sleep 1
-                            Move-Item -Path "$env:USERPROFILE\OneDrive\*" -Destination "$env:USERPROFILE\Desktop\OneDriveBackupFiles" -Force
-                            $lb_log.text = 'Movendo arquivos do oneDrive para OneDriveBackupFiles...'
-                            Start-Sleep 1
-                            $lb_log.text = 'Processando para remover oneDrive...'
-                            Start-Sleep 1
-                        }
-                        Else {
-                            $lb_log.text = "Either the OneDrive folder does not exist or there are no files to be found in the folder. Proceeding with removal of OneDrive."
-                            Start-Sleep 1
-                            $lb_log.text = "Enabling the Group Policy 'Prevent the usage of OneDrive for File Storage'."
-                            $OneDriveKey = 'HKLM:Software\Policies\Microsoft\Windows\OneDrive'
-                            If (!(Test-Path $OneDriveKey)) {
-                                Mkdir $OneDriveKey
-                                Set-ItemProperty $OneDriveKey -Name OneDrive -Value DisableFileSyncNGSC
-                            }
-                            Set-ItemProperty $OneDriveKey -Name OneDrive -Value DisableFileSyncNGSC
-                        }
-                    
-                        $lb_log.text = "Uninstalling OneDrive. Please wait..."
-                    
-                        New-PSDrive  HKCR -PSProvider Registry -Root HKEY_CLASSES_ROOT
-                        $onedrive = "$env:SYSTEMROOT\SysWOW64\OneDriveSetup.exe"
-                        $ExplorerReg1 = "HKCR:\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}"
-                        $ExplorerReg2 = "HKCR:\Wow6432Node\CLSID\{018D5C66-4533-4307-9B53-224DE2ED1FE6}"
-                        Stop-Process -Name "OneDrive*"
-                        Start-Sleep 2
-                        If (!(Test-Path $onedrive)) {
-                            $onedrive = "$env:SYSTEMROOT\System32\OneDriveSetup.exe"
-                        }
-                        Start-Process $onedrive "/uninstall" -NoNewWindow -Wait
-                        Start-Sleep 2
-                        $lb_log.text = "Stopping explorer"
-                        Start-Sleep 1
-                        taskkill.exe /F /IM explorer.exe
-                        Start-Sleep 3
-                        $lb_log.text = "Removing leftover files"
-                        If (Test-Path "$env:USERPROFILE\OneDrive") {
-                            Remove-Item "$env:USERPROFILE\OneDrive" -Force -Recurse
-                        }
-                        If (Test-Path "$env:LOCALAPPDATA\Microsoft\OneDrive") {
-                            Remove-Item "$env:LOCALAPPDATA\Microsoft\OneDrive" -Force -Recurse
-                        }
-                        If (Test-Path "$env:PROGRAMDATA\Microsoft OneDrive") {
-                            Remove-Item "$env:PROGRAMDATA\Microsoft OneDrive" -Force -Recurse
-                        }
-                        If (Test-Path "$env:SYSTEMDRIVE\OneDriveTemp") {
-                            Remove-Item "$env:SYSTEMDRIVE\OneDriveTemp" -Force -Recurse
-                        }
-                        $lb_log.text = "Removing OneDrive from windows explorer"
-                        If (!(Test-Path $ExplorerReg1)) {
-                            New-Item $ExplorerReg1
-                        }
-                        Set-ItemProperty $ExplorerReg1 System.IsPinnedToNameSpaceTree -Value 0 
-                        If (!(Test-Path $ExplorerReg2)) {
-                            New-Item $ExplorerReg2
-                        }
-                        Set-ItemProperty $ExplorerReg2 System.IsPinnedToNameSpaceTree -Value 0
-                        $lb_log.text = "Restarting Explorer that was shut down before."
-                        Start-Process explorer.exe -NoNewWindow
-                        $lb_log.text = "OneDrive has been successfully uninstalled!"
-                        
-                        Remove-item env:OneDrive
-                        
-                    } -Name "jobremonedrive"
+                    Remove_onedrive
 
                     $restart = $true
                     $cont ++
@@ -2624,7 +2554,6 @@ function main_form {
                     $lb_percent.Text = (($cont / $cont_max) * 100), "%"
                     
                 }
-
 
                 # Condição depois de rodar tudo 
                 if ($selected) {
