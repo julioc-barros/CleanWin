@@ -2578,6 +2578,11 @@ function main_form {
                         else { 
                             $suporte_GUI.Close()
                         }
+                    }else {
+                        [System.Windows.Forms.MessageBox]::Show("Limpeza concluida", "Concluido", "Ok")
+                        $lb_log.Text = ""
+                        $ProgressBar.value = 0
+                        $lb_percent.text = "0%"
                     }
 
                 }
