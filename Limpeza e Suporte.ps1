@@ -1134,11 +1134,11 @@ function main_form {
             $cb_list_function.Items.Add("Desabilitando serviços de inicialização") | Out-Null
             $cb_list_function.Items.Add("Desabilitar telemetria") | Out-Null
             $cb_list_function.Items.Add("Desabilitar Cortana") | Out-Null
-            $cb_list_function.Items.Add("Desinstalar OneDrive") | Out-Null
+            # $cb_list_function.Items.Add("Desinstalar OneDrive") | Out-Null
             $cb_list_function.Items.Add("Desativar hibernação") | Out-Null
             $cb_list_function.Items.Add("Limpeza de Disco") | Out-Null
             $cb_list_function.Items.Add("Limpeza no Registro") | Out-Null
-            $cb_list_function.Items.Add("Remover aplicativos nativos") | Out-Null
+            # $cb_list_function.Items.Add("Remover aplicativos nativos") | Out-Null
         }
 
         function container_vert_line {
@@ -1318,7 +1318,7 @@ function main_form {
                     $cb_list_function.SetItemChecked(6, 1)
                     $cb_list_function.SetItemChecked(7, 1)
                     $cb_list_function.SetItemChecked(8, 1)
-                    $cb_list_function.SetItemChecked(9, 1)
+                    # $cb_list_function.SetItemChecked(9, 1)
 
                 }
                 else {
@@ -2602,6 +2602,7 @@ function main_form {
         [void]$suporte_GUI.ShowDialog()
         
     }
+    
     Form
 }
     
