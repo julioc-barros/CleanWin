@@ -699,6 +699,135 @@ function Manage_Startup {
     }
 }
 
+function Optimize_Services {
+    Write-Log "Iniciando função Optimize_Services"
+    try {
+        $lb_log.Text = 'Abrindo gerenciador de serviços...'
+
+        $servicesGUI = New-Object System.Windows.Forms.Form
+        $servicesGUI.ClientSize = New-Object System.Drawing.Point(400, 300)
+        $servicesGUI.Text = "Otimizar Serviços do Windows"
+        $servicesGUI.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#343434")
+        $servicesGUI.FormBorderStyle = 'Fixed3D'
+        $servicesGUI.StartPosition = "CenterScreen"
+
+        $servicesList = New-Object System.Windows.Forms.CheckedListBox
+        $servicesList.Location = New-Object System.Drawing.Point(10, 10)
+        $servicesList.Size = New-Object System.Drawing.Size(380, 200)
+        $servicesList.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#343434")
+        $servicesList.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#fff")
+        $servicesList.Font = New-Object System.Drawing.Font('Segoe UI', 10)
+        $servicesList.CheckOnClick = $true
+
+        $btnApply = New-Object System.Windows.Forms.Button
+        $btnApply.Text = "APLICAR"
+        $btnApply.Location = New-Object System.Drawing.Point(250, 220)
+        $btnApply.Size = New-Object System.Drawing.Size(75, 30)
+
+        $btnClose = New-Object System.Windows.Forms.Button
+        $btnClose.Text = "FECHAR"
+        $btnClose.Location = New-Object System.Drawing.Point(330, 220)
+        $btnClose.Size = New-Object System.Drawing.Size(75, 30)
+
+        $lbStatus = New-Object System.Windows.Forms.Label
+        $lbStatus.Location = New-Object System.Drawing.Point(10, 260)
+        $lbStatus.Size = New-Object System.Drawing.Size(380, 20)
+        $lbStatus.TextAlign = 'MiddleCenter'
+        $lbStatus.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#fff")
+
+        $servicesGUI.Controls.AddRange(@($servicesList, $btnApply, $btnClose, $lbStatus))
+
+        $targetServices = @(
+            @{Name = "Spooler"; DisplayName = "Spooler de Impressão" },
+            @{Name = "BluetoothUserService"; DisplayName = "Serviço de Usuário Bluetooth" },
+            @{Name = "XblAuthManager"; DisplayName = "Gerenciador de Autenticação Xbox" }
+        )
+        foreach ($svc in $targetServices) {
+            $service = Get-Service -Name $svc.Name -ErrorAction SilentlyContinue
+            if ($service) {
+                $servicesList.Items.Add($svc.DisplayName, $service.StartType -ne 'Disabled')
+            }
+        }
+
+        $btnApply.Add_Click({
+                $lbStatus.Text = 'Aplicando mudanças...'
+                try {
+                    for ($i = 0; $i -lt $servicesList.Items.Count; $i++) {
+                        $svcDisplayName = $servicesList.Items[$i]
+                        $isChecked = $servicesList.GetItemChecked($i)
+                        $svc = $targetServices | Where-Object { $_.DisplayName -eq $svcDisplayName }
+                        Set-Service -Name $svc.Name -StartupType ($isChecked ? 'Automatic' : 'Disabled')
+                        Write-Log "Serviço $($svc.Name) configurado como $(if ($isChecked) {'Ativado'} else {'Desativado'})"
+                    }
+                    $lbStatus.Text = 'Mudanças aplicadas com sucesso!'
+                }
+                catch {
+                    $lbStatus.Text = "Erro: $($_.Exception.Message)"
+                    Write-Log "Erro ao configurar serviços: $($_.Exception.Message)"
+                }
+            })
+
+        $btnClose.Add_Click({ $servicesGUI.Close() })
+        [void]$servicesGUI.ShowDialog()
+
+        $lb_log.Text = 'Otimização de serviços concluída.'
+        Write-Log "Concluindo função Optimize_Services"
+    }
+    catch {
+        $lb_log.Text = "Erro ao otimizar serviços: $($_.Exception.Message)"
+        Write-Log "Erro na otimização de serviços: $($_.Exception.Message)"
+    }
+}
+
+function Check_System_Integrity {
+    Write-Log "Iniciando função Check_System_Integrity"
+    try {
+        $lb_log.Text = 'Executando verificação de integridade do sistema...'
+
+        $lb_log.Text = 'Executando sfc /scannow...'
+        $sfcResult = Start-Process -FilePath "sfc.exe" -ArgumentList "/scannow" -Wait -NoNewWindow -PassThru
+        Write-Log "SFC concluído com código de saída: $($sfcResult.ExitCode)"
+        $lb_log.Text = 'SFC concluído. Iniciando DISM...'
+
+        $dismResult = Start-Process -FilePath "DISM.exe" -ArgumentList "/Online /Cleanup-Image /RestoreHealth" -Wait -NoNewWindow -PassThru
+        Write-Log "DISM concluído com código de saída: $($dismResult.ExitCode)"
+        $lb_log.Text = 'Verificação de integridade concluída.'
+
+        if ($sfcResult.ExitCode -eq 0 -and $dismResult.ExitCode -eq 0) {
+            $lb_log.Text = 'Nenhum problema encontrado ou reparos concluídos.'
+        }
+        else {
+            $lb_log.Text = 'Problemas encontrados. Verifique os logs do sistema.'
+        }
+    }
+    catch {
+        $lb_log.Text = "Erro na verificação de integridade: $($_.Exception.Message)"
+        Write-Log "Erro na verificação de integridade: $($_.Exception.Message)"
+    }
+    Write-Log "Concluindo função Check_System_Integrity"
+}
+
+function Clear_DNS_Cache {
+    Write-Log "Iniciando função Clear_DNS_Cache"
+    try {
+        $lb_log.Text = 'Limpando cache DNS...'
+        $result = Start-Process -FilePath "ipconfig.exe" -ArgumentList "/flushdns" -Wait -NoNewWindow -PassThru
+        if ($result.ExitCode -eq 0) {
+            $lb_log.Text = 'Cache DNS limpo com sucesso.'
+            Write-Log "Cache DNS limpo com sucesso"
+        }
+        else {
+            $lb_log.Text = 'Erro ao limpar cache DNS.'
+            Write-Log "Erro ao limpar cache DNS: Código $($result.ExitCode)"
+        }
+    }
+    catch {
+        $lb_log.Text = "Erro ao limpar cache DNS: $($_.Exception.Message)"
+        Write-Log "Erro ao limpar cache DNS: $($_.Exception.Message)"
+    }
+    Write-Log "Concluindo função Clear_DNS_Cache"
+}
+
 function main_form {
     
     Add-Type -AssemblyName System.Windows.Forms
@@ -895,9 +1024,12 @@ function main_form {
         $cb_list_function.Items.Add("Desabilitar telemetria") | Out-Null
         $cb_list_function.Items.Add("Desabilitar Cortana") | Out-Null
         $cb_list_function.Items.Add("Desativar hibernação") | Out-Null
+        $cb_list_function.Items.Add("Gerenciar programas de inicialização") | Out-Null
+        $cb_list_function.Items.Add("Limpar cache DNS") | Out-Null
         $cb_list_function.Items.Add("Limpeza de Disco") | Out-Null
         $cb_list_function.Items.Add("Limpeza no Registro") | Out-Null
-        $cb_list_function.Items.Add("Gerenciar programas de inicialização") | Out-Null
+        $cb_list_function.Items.Add("Otimizar serviços do Windows") | Out-Null
+        $cb_list_function.Items.Add("Verificar integridade do sistema") | Out-Null
     }
 
     function container_vert_line {
@@ -1483,13 +1615,6 @@ function main_form {
                 $ProgressBar.value = ($cont / $cont_max) * 100
                 $lb_percent.Text = "{0}%" -f ([math]::Round(($cont / $cont_max) * 100))
             }
-            if ($selected.Contains("Desinstalar OneDrive")) {
-                Remove_onedrive
-                $restart = $true
-                $cont++
-                $ProgressBar.value = ($cont / $cont_max) * 100
-                $lb_percent.Text = "{0}%" -f ([math]::Round(($cont / $cont_max) * 100))
-            }
             if ($selected.Contains("Desabilitar telemetria")) {
                 Start-Job -ScriptBlock { Disable_telemetry } -Name "jobdistelemetry"
                 $cont++
@@ -1503,19 +1628,25 @@ function main_form {
                 $ProgressBar.value = ($cont / $cont_max) * 100
                 $lb_percent.Text = "{0}%" -f ([math]::Round(($cont / $cont_max) * 100))
             }
-            if ($selected.Contains("Gerenciar programas de inicialização")) {
-                Manage_Startup
+            if ($selected.Contains("Otimizar serviços do Windows")) {
+                Optimize_Services
                 $cont++
                 $ProgressBar.value = ($cont / $cont_max) * 100
                 $lb_percent.Text = "{0}%" -f ([math]::Round(($cont / $cont_max) * 100))
             }
-            if ($selected.Contains("Fazer backup do registro")) {
-                Backup_Registry
+            if ($selected.Contains("Verificar integridade do sistema")) {
+                Check_System_Integrity
                 $cont++
                 $ProgressBar.value = ($cont / $cont_max) * 100
                 $lb_percent.Text = "{0}%" -f ([math]::Round(($cont / $cont_max) * 100))
             }
-            
+            if ($selected.Contains("Limpar cache DNS")) {
+                Clear_DNS_Cache
+                $cont++
+                $ProgressBar.value = ($cont / $cont_max) * 100
+                $lb_percent.Text = "{0}%" -f ([math]::Round(($cont / $cont_max) * 100))
+            }
+
             # Aguardar conclusão dos jobs
             Get-Job | Wait-Job | Out-Null
             Get-Job | Remove-Job
