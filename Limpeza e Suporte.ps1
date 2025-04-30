@@ -1072,13 +1072,13 @@ function InitProgram {
                 $_.graphics.drawrectangle($whitePen, $this.clientrectangle)
             })
 
-        $lb_title_computername = New-Object System.Windows.Forms.Label
-        $lb_title_computername.Location = New-Object System.Drawing.Point(30, 74)
-        $lb_title_computername.Size = New-Object System.Drawing.Size(231, 14)
-        $lb_title_computername.Text = 'NOME DO COMPUTADOR'
-        $lb_title_computername.Font = New-Object System.Drawing.Font('Inter', 8, [System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
-        $lb_title_computername.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#fff")
-        $lb_title_computername.TextAlign = 'MiddleCenter'
+        $lb_title_computer_name = New-Object System.Windows.Forms.Label
+        $lb_title_computer_name.Text = 'NOME DO COMPUTADOR'
+        $lb_title_computer_name.Location = New-Object System.Drawing.Point(30, 74)
+        $lb_title_computer_name.Size = New-Object System.Drawing.Size(231, 14)
+        $lb_title_computer_name.TextAlign = 'MiddleCenter'
+        $lb_title_computer_name.Font = New-Object System.Drawing.Font('Inter', 8, [System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
+        $lb_title_computer_name.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#fff")
 
         $lb_computername = New-Object System.Windows.Forms.Label
         $lb_computername.Location = New-Object System.Drawing.Point(30, 95)
@@ -1088,10 +1088,9 @@ function InitProgram {
         $lb_computername.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#fff")
         $lb_computername.TextAlign = 'MiddleCenter'
 
-
         $InterfaceProgram.controls.AddRange(@(   
                 $lb_computername,
-                $lb_title_computername,
+                $lb_title_computer_name,
                 $line_computername,
                 $lb_container_namecomputer    
             ))
@@ -1120,25 +1119,25 @@ function InitProgram {
                 $_.graphics.drawrectangle($whitePen, $this.clientrectangle)
             })
 
-        $lb_title_computerip = New-Object System.Windows.Forms.Label
-        $lb_title_computerip.Location = New-Object System.Drawing.Point(30, 145)
-        $lb_title_computerip.Size = New-Object System.Drawing.Size(231, 14)
-        $lb_title_computerip.Text = 'IP DO COMPUTADOR'
-        $lb_title_computerip.Font = New-Object System.Drawing.Font('Inter', 8, [System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
-        $lb_title_computerip.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#fff")
-        $lb_title_computerip.TextAlign = 'MiddleCenter'
+        $lb_title_ip = New-Object System.Windows.Forms.Label
+        $lb_title_ip.Location = New-Object System.Drawing.Point(30, 145)
+        $lb_title_ip.Size = New-Object System.Drawing.Size(231, 14)
+        $lb_title_ip.Text = 'IP DO COMPUTADOR'
+        $lb_title_ip.Font = New-Object System.Drawing.Font('Inter', 8, [System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
+        $lb_title_ip.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#fff")
+        $lb_title_ip.TextAlign = 'MiddleCenter'
 
-        $lb_computerip = New-Object System.Windows.Forms.Label
-        $lb_computerip.Location = New-Object System.Drawing.Point(30, 166)
-        $lb_computerip.Size = New-Object System.Drawing.Size(230, 30)
-        $lb_computerip.Text = $ipcomputer[0]
-        $lb_computerip.Font = New-Object System.Drawing.Font('Inter', 15, [System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
-        $lb_computerip.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#fff")
-        $lb_computerip.TextAlign = 'MiddleCenter'
+        $lb_ip = New-Object System.Windows.Forms.Label
+        $lb_ip.Location = New-Object System.Drawing.Point(30, 166)
+        $lb_ip.Size = New-Object System.Drawing.Size(230, 30)
+        $lb_ip.Text = $ipcomputer[0]
+        $lb_ip.Font = New-Object System.Drawing.Font('Inter', 15, [System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
+        $lb_ip.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#fff")
+        $lb_ip.TextAlign = 'MiddleCenter'
 
         $InterfaceProgram.controls.AddRange(@(   
-                $lb_computerip,
-                $lb_title_computerip,
+                $lb_ip,
+                $lb_title_ip,
                 $line_computerip,
                 $lb_container_ipcomputer    
             ))
@@ -1229,6 +1228,165 @@ function InitProgram {
             ))
     }
 
+    function Show_More_Actions {
+        Write-Log "Iniciando função Show_More_Actions"
+        try {
+            $actionsGUI = New-Object System.Windows.Forms.Form
+            $actionsGUI.ClientSize = New-Object System.Drawing.Point(300, 300)
+            $actionsGUI.Text = "Mais Ações"
+            $actionsGUI.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#343434")
+            $actionsGUI.FormBorderStyle = 'Fixed3D'
+            $actionsGUI.StartPosition = "CenterScreen"
+            $actionsGUI.MaximizeBox = $false
+    
+            # Botão Alterar Nome do Computador
+            $btnChangeName = New-Object System.Windows.Forms.Button
+            $btnChangeName.Text = "ALTERAR NOME"
+            $btnChangeName.Location = New-Object System.Drawing.Point(50, 20)
+            $btnChangeName.Size = New-Object System.Drawing.Size(200, 30)
+            $btnChangeName.Font = New-Object System.Drawing.Font('Arial Black', 7.3, [System.Drawing.FontStyle]::Bold)
+            $btnChangeName.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#ffffff")
+            $btnChangeName.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
+    
+            # Botão Recuperar Imagem do Windows
+            $btnRecoverImage = New-Object System.Windows.Forms.Button
+            $btnRecoverImage.Text = "RECUPERAR IMAGEM"
+            $btnRecoverImage.Location = New-Object System.Drawing.Point(50, 60)
+            $btnRecoverImage.Size = New-Object System.Drawing.Size(200, 30)
+            $btnRecoverImage.Font = New-Object System.Drawing.Font('Arial Black', 7.3, [System.Drawing.FontStyle]::Bold)
+            $btnRecoverImage.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#ffffff")
+            $btnRecoverImage.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
+    
+            # Botão Consertar Erros do Windows
+            $btnFixErrors = New-Object System.Windows.Forms.Button
+            $btnFixErrors.Text = "CONSERTAR ERROS"
+            $btnFixErrors.Location = New-Object System.Drawing.Point(50, 100)
+            $btnFixErrors.Size = New-Object System.Drawing.Size(200, 30)
+            $btnFixErrors.Font = New-Object System.Drawing.Font('Arial Black', 7.3, [System.Drawing.FontStyle]::Bold)
+            $btnFixErrors.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#ffffff")
+            $btnFixErrors.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
+    
+            # Botão Iniciar Serviços
+            $btnEnableServices = New-Object System.Windows.Forms.Button
+            $btnEnableServices.Text = "INICIAR SERVIÇOS"
+            $btnEnableServices.Location = New-Object System.Drawing.Point(50, 140)
+            $btnEnableServices.Size = New-Object System.Drawing.Size(200, 30)
+            $btnEnableServices.Font = New-Object System.Drawing.Font('Arial Black', 7.3, [System.Drawing.FontStyle]::Bold)
+            $btnEnableServices.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#ffffff")
+            $btnEnableServices.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
+    
+            # Botão Desativar Telemetria
+            $btnDisableTelemetry = New-Object System.Windows.Forms.Button
+            $btnDisableTelemetry.Text = "DESATIVAR TELEMETRIA"
+            $btnDisableTelemetry.Location = New-Object System.Drawing.Point(50, 180)
+            $btnDisableTelemetry.Size = New-Object System.Drawing.Size(200, 30)
+            $btnDisableTelemetry.Font = New-Object System.Drawing.Font('Arial Black', 7.3, [System.Drawing.FontStyle]::Bold)
+            $btnDisableTelemetry.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#ffffff")
+            $btnDisableTelemetry.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
+    
+            # Botão Fechar
+            $btnClose = New-Object System.Windows.Forms.Button
+            $btnClose.Text = "FECHAR"
+            $btnClose.Location = New-Object System.Drawing.Point(50, 220)
+            $btnClose.Size = New-Object System.Drawing.Size(200, 30)
+            $btnClose.Font = New-Object System.Drawing.Font('Arial Black', 7.3, [System.Drawing.FontStyle]::Bold)
+            $btnClose.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#ffffff")
+            $btnClose.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
+    
+            # Label de Status
+            $lbStatus = New-Object System.Windows.Forms.Label
+            $lbStatus.Location = New-Object System.Drawing.Point(10, 260)
+            $lbStatus.Size = New-Object System.Drawing.Size(280, 20)
+            $lbStatus.TextAlign = 'MiddleCenter'
+            $lbStatus.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#fff")
+            $lbStatus.Font = New-Object System.Drawing.Font('Segoe UI', 8)
+    
+            $actionsGUI.Controls.AddRange(@($btnChangeName, $btnRecoverImage, $btnFixErrors, $btnEnableServices, $btnDisableTelemetry, $btnClose, $lbStatus))
+    
+            # Eventos dos Botões
+            $btnChangeName.Add_Click({
+                    $lbStatus.Text = 'Alterando nome do computador...'
+                    try {
+                        Change_Computer_Name
+                        $lbStatus.Text = 'Nome do computador alterado.'
+                        Write-Log "Ação direta: Nome do computador alterado"
+                    }
+                    catch {
+                        $lbStatus.Text = "Erro: $($_.Exception.Message)"
+                        Write-Log "Erro ao alterar nome do computador: $($_.Exception.Message)"
+                    }
+                })
+    
+            $btnRecoverImage.Add_Click({
+                    $lbStatus.Text = 'Recuperando imagem do Windows...'
+                    try {
+                        Recover_Windows_Image
+                        $lbStatus.Text = 'Imagem do Windows recuperada.'
+                        Write-Log "Ação direta: Imagem do Windows recuperada"
+                    }
+                    catch {
+                        $lbStatus.Text = "Erro: $($_.Exception.Message)"
+                        Write-Log "Erro ao recuperar imagem do Windows: $($_.Exception.Message)"
+                    }
+                })
+    
+            $btnFixErrors.Add_Click({
+                    $lbStatus.Text = 'Consertando erros do Windows...'
+                    try {
+                        Fix_Windows_Errors
+                        $lbStatus.Text = 'Erros do Windows consertados.'
+                        Write-Log "Ação direta: Erros do Windows consertados"
+                    }
+                    catch {
+                        $lbStatus.Text = "Erro: $($_.Exception.Message)"
+                        Write-Log "Erro ao consertar erros do Windows: $($_.Exception.Message)"
+                    }
+                })
+    
+            $btnEnableServices.Add_Click({
+                    $lbStatus.Text = 'Iniciando serviços...'
+                    try {
+                        Enable_start_services # Supondo que você tenha uma função para reativar os serviços
+                        $lbStatus.Text = 'Serviços iniciados.'
+                        Write-Log "Ação direta: Serviços iniciados"
+                    }
+                    catch {
+                        $lbStatus.Text = "Erro: $($_.Exception.Message)"
+                        Write-Log "Erro ao iniciar serviços: $($_.Exception.Message)"
+                    }
+                })
+    
+            $btnDisableTelemetry.Add_Click({
+                    $lbStatus.Text = 'Desativando telemetria...'
+                    try {
+                        Disable_telemetry
+                        $lbStatus.Text = 'Telemetria desativada.'
+                        Write-Log "Ação direta: Telemetria desativada"
+                    }
+                    catch {
+                        $lbStatus.Text = "Erro: $($_.Exception.Message)"
+                        Write-Log "Erro ao desativar telemetria: $($_.Exception.Message)"
+                    }
+                })
+    
+            $btnClose.Add_Click({ $actionsGUI.Close() })
+    
+            # Efeitos de Hover
+            $buttons = @($btnChangeName, $btnRecoverImage, $btnFixErrors, $btnEnableServices, $btnDisableTelemetry, $btnClose)
+            foreach ($btn in $buttons) {
+                $btn.Add_MouseEnter({ $this.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#FFF"); $this.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#121212") })
+                $btn.Add_MouseLeave({ $this.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212"); $this.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#FFF") })
+            }
+    
+            [void]$actionsGUI.ShowDialog()
+            Write-Log "Concluindo função Show_More_Actions"
+        }
+        catch {
+            $lb_log.Text = "Erro ao exibir mais ações: $($_.Exception.Message)"
+            Write-Log "Erro na função Show_More_Actions: $($_.Exception.Message)"
+        }
+    }
+
     $ProgressBar = New-Object system.Windows.Forms.ProgressBar
     $ProgressBar.width = 500
     $ProgressBar.height = 3
@@ -1261,73 +1419,100 @@ function InitProgram {
             $checkbox_all_list
         ))
 
-    $change_name_computer = New-Object system.Windows.Forms.Button
-    $change_name_computer.text = "ALTERAR NOME DO COMPUTADOR"
-    $change_name_computer.AutoSize = $false
-    $change_name_computer.width = 240
-    $change_name_computer.height = 40
-    $change_name_computer.location = New-Object System.Drawing.Point(26, 215)
-    $change_name_computer.Font = New-Object System.Drawing.Font('Arial Black', 8, [System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
-    $change_name_computer.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#ffffff")
-    $change_name_computer.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
-    $InterfaceProgram.controls.AddRange(@(   
-            $change_name_computer
-        ))
+    $btnMoreActions = New-Object System.Windows.Forms.Button
+    $btnMoreActions.Text = "MAIS AÇÕES"
+    $btnMoreActions.Location = New-Object System.Drawing.Point(26, 215)
+    $btnMoreActions.AutoSize = $false
+    $btnMoreActions.width = 240
+    $btnMoreActions.height = 40
 
-    $toolTip.SetToolTip($change_name_computer, "Mude o nome do seu computador")
+    # $btnMoreActions.Size = New-Object System.Drawing.Size(220, 30)
+    $btnMoreActions.Font = New-Object System.Drawing.Font('Arial Black', 7.3, [System.Drawing.FontStyle]::Bold)
+    $btnMoreActions.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#ffffff")
+    $btnMoreActions.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
+
+    $btnMoreActions.Add_MouseEnter({ 
+            $btnMoreActions.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#FFF")
+            $btnMoreActions.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
+        })
+    $btnMoreActions.Add_MouseLeave({ 
+            $btnMoreActions.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
+            $btnMoreActions.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#FFF")
+        })
+        
+    $InterfaceProgram.Controls.Add($btnMoreActions)
+    $btnMoreActions.Add_Click({
+            Show_More_Actions
+        })
+
+    # $change_name_computer = New-Object system.Windows.Forms.Button
+    # $change_name_computer.text = "ALTERAR NOME DO COMPUTADOR"
+    # $change_name_computer.AutoSize = $false
+    # $change_name_computer.width = 240
+    # $change_name_computer.height = 40
+    # $change_name_computer.location = New-Object System.Drawing.Point(26, 215)
+    # $change_name_computer.Font = New-Object System.Drawing.Font('Arial Black', 8, [System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
+    # $change_name_computer.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#ffffff")
+    # $change_name_computer.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
+    # $InterfaceProgram.controls.AddRange(@(   
+    #         $change_name_computer
+    #     ))
+
+    # $toolTip.SetToolTip($change_name_computer, "Mude o nome do seu computador")
 
 
-    $btn_windows_image = New-Object system.Windows.Forms.Button
-    $btn_windows_image.text = "RECUPERAR IMAGEM DO WINDOWS"
-    $btn_windows_image.AutoSize = $false
-    $btn_windows_image.Visible = $true
-    $btn_windows_image.width = 240
-    $btn_windows_image.height = 40
-    $btn_windows_image.location = New-Object System.Drawing.Point(26, 265)
-    $btn_windows_image.Font = New-Object System.Drawing.Font('Arial Black', 8, [System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
-    $btn_windows_image.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#ffffff")
-    $btn_windows_image.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
+    # $btn_windows_image = New-Object system.Windows.Forms.Button
+    # $btn_windows_image.text = "RECUPERAR IMAGEM DO WINDOWS"
+    # $btn_windows_image.AutoSize = $false
+    # $btn_windows_image.Visible = $true
+    # $btn_windows_image.width = 240
+    # $btn_windows_image.height = 40
+    # $btn_windows_image.location = New-Object System.Drawing.Point(26, 265)
+    # $btn_windows_image.Font = New-Object System.Drawing.Font('Arial Black', 8, [System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
+    # $btn_windows_image.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#ffffff")
+    # $btn_windows_image.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
 
-    $btn_cancel_windows_image = New-Object system.Windows.Forms.Button
-    $btn_cancel_windows_image.text = "CANCELAR RECUPERAÇÃO"
-    $btn_cancel_windows_image.AutoSize = $false
-    $btn_cancel_windows_image.Visible = $False
-    $btn_cancel_windows_image.width = 240
-    $btn_cancel_windows_image.height = 40
-    $btn_cancel_windows_image.location = New-Object System.Drawing.Point(26, 265)
-    $btn_cancel_windows_image.Font = New-Object System.Drawing.Font('Arial Black', 8, [System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
-    $btn_cancel_windows_image.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#ffffff")
-    $btn_cancel_windows_image.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
-    $InterfaceProgram.controls.AddRange(@(   
-            $btn_windows_image
-            $btn_cancel_windows_image
-        ))
+    # $btn_cancel_windows_image = New-Object system.Windows.Forms.Button
+    # $btn_cancel_windows_image.text = "CANCELAR RECUPERAÇÃO"
+    # $btn_cancel_windows_image.AutoSize = $false
+    # $btn_cancel_windows_image.Visible = $False
+    # $btn_cancel_windows_image.width = 240
+    # $btn_cancel_windows_image.height = 40
+    # $btn_cancel_windows_image.location = New-Object System.Drawing.Point(26, 265)
+    # $btn_cancel_windows_image.Font = New-Object System.Drawing.Font('Arial Black', 8, [System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
+    # $btn_cancel_windows_image.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#ffffff")
+    # $btn_cancel_windows_image.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
+    
+    # $InterfaceProgram.controls.AddRange(@(   
+    # $btn_windows_image
+    # $btn_cancel_windows_image
+    # ))
 
-    $btn_windows_errors = New-Object system.Windows.Forms.Button
-    $btn_windows_errors.text = "CONSERTAR ERROS DO WINDOWS"
-    $btn_windows_errors.Visible = $true
-    $btn_windows_errors.width = 240
-    $btn_windows_errors.height = 40
-    $btn_windows_errors.TextAlign = "MiddleCenter"
-    $btn_windows_errors.location = New-Object System.Drawing.Point(26, 315)
-    $btn_windows_errors.Font = New-Object System.Drawing.Font('Arial Black', 8, [System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
-    $btn_windows_errors.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#ffffff")
-    $btn_windows_errors.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
+    # $btn_windows_errors = New-Object system.Windows.Forms.Button
+    # $btn_windows_errors.text = "CONSERTAR ERROS DO WINDOWS"
+    # $btn_windows_errors.Visible = $true
+    # $btn_windows_errors.width = 240
+    # $btn_windows_errors.height = 40
+    # $btn_windows_errors.TextAlign = "MiddleCenter"
+    # $btn_windows_errors.location = New-Object System.Drawing.Point(26, 315)
+    # $btn_windows_errors.Font = New-Object System.Drawing.Font('Arial Black', 8, [System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
+    # $btn_windows_errors.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#ffffff")
+    # $btn_windows_errors.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
 
-    $btn_cancel_windows_errors = New-Object system.Windows.Forms.Button
-    $btn_cancel_windows_errors.text = "CANCELAR CONSERTO DE ERROS"
-    $btn_cancel_windows_errors.Visible = $false
-    $btn_cancel_windows_errors.width = 240
-    $btn_cancel_windows_errors.height = 40
-    $btn_cancel_windows_errors.TextAlign = "MiddleCenter"
-    $btn_cancel_windows_errors.location = New-Object System.Drawing.Point(26, 315)
-    $btn_cancel_windows_errors.Font = New-Object System.Drawing.Font('Arial Black', 8, [System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
-    $btn_cancel_windows_errors.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#ffffff")
-    $btn_cancel_windows_errors.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
-    $InterfaceProgram.controls.AddRange(@(   
-            $btn_windows_errors,
-            $btn_cancel_windows_errors
-        ))
+    # $btn_cancel_windows_errors = New-Object system.Windows.Forms.Button
+    # $btn_cancel_windows_errors.text = "CANCELAR CONSERTO DE ERROS"
+    # $btn_cancel_windows_errors.Visible = $false
+    # $btn_cancel_windows_errors.width = 240
+    # $btn_cancel_windows_errors.height = 40
+    # $btn_cancel_windows_errors.TextAlign = "MiddleCenter"
+    # $btn_cancel_windows_errors.location = New-Object System.Drawing.Point(26, 315)
+    # $btn_cancel_windows_errors.Font = New-Object System.Drawing.Font('Arial Black', 8, [System.Drawing.FontStyle]([System.Drawing.FontStyle]::Bold))
+    # $btn_cancel_windows_errors.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#ffffff")
+    # $btn_cancel_windows_errors.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
+    # $InterfaceProgram.controls.AddRange(@(   
+    #         $btn_windows_errors,
+    #         $btn_cancel_windows_errors
+    #     ))
 
     $lb_log = New-Object System.Windows.Forms.Label
     $lb_log.Location = New-Object System.Drawing.Point(25, 380)
@@ -1619,112 +1804,112 @@ function InitProgram {
     $timer_sfc.add_Tick($tick_sfc)
 
 
-    $btn_windows_image.Add_Click({ 
-            $btn_cancel_windows_image.Visible = $true
-            $btn_windows_image.Visible = $False
-            $lb_log.text = 'Iniciando Limpeza do Windows...'
+    # $btn_windows_image.Add_Click({ 
+    #         $btn_cancel_windows_image.Visible = $true
+    #         $btn_windows_image.Visible = $False
+    #         $lb_log.text = 'Iniciando Limpeza do Windows...'
 
-            Start-Job -ScriptBlock {
-                DISM.exe /Online /Cleanup-image /Restorehealth /LogLevel:4 >> Dism.log
-            } -Name "jobdism"
+    #         Start-Job -ScriptBlock {
+    #             DISM.exe /Online /Cleanup-image /Restorehealth /LogLevel:4 >> Dism.log
+    #         } -Name "jobdism"
 
-            $timer_Dism.Interval = 1000
-            $timer_Dism.Start()
-            $lb_log.Text = "Processando..."
-            $ProgressBar.Value = 0
-            $lb_percent.text = "0%"
+    #         $timer_Dism.Interval = 1000
+    #         $timer_Dism.Start()
+    #         $lb_log.Text = "Processando..."
+    #         $ProgressBar.Value = 0
+    #         $lb_percent.text = "0%"
 
-        })
-    $btn_windows_image.Add_MouseEnter({ 
-            $btn_windows_image.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#FFF")
-            $btn_windows_image.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
-        })
-    $btn_windows_image.Add_MouseLeave({ 
-            $btn_windows_image.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
-            $btn_windows_image.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#FFF")
-        })
-
-
-    $btn_cancel_windows_image.Add_Click({ 
-            $timer_Dism.stop()
-            $this.Visible = $False
-            $btn_windows_image.Visible = $true
-            Get-Job jobdism | stop-job
-            Get-Job jobdism | Remove-Job
-            Remove-Item Dism.log
-            $lb_percent.Text = "0%"
-            $ProgressBar.Value = 0
-            $lb_log.Text = "Limpeza Cancelada"
-            Start-Sleep -Seconds 1
-            $lb_log.Text = ""
-
-        })
-    $btn_cancel_windows_image.Add_MouseEnter({ 
-            $btn_windows_image.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
-            $btn_windows_image.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#FFF")
-        })
-    $btn_cancel_windows_image.Add_MouseLeave({ 
-
-            $btn_windows_image.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#FFF")
-            $btn_windows_image.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
-        })
+    #     })
+    # $btn_windows_image.Add_MouseEnter({ 
+    #         $btn_windows_image.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#FFF")
+    #         $btn_windows_image.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
+    #     })
+    # $btn_windows_image.Add_MouseLeave({ 
+    #         $btn_windows_image.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
+    #         $btn_windows_image.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#FFF")
+    #     })
 
 
-    $btn_windows_errors.Add_Click({ 
+    # $btn_cancel_windows_image.Add_Click({ 
+    #         $timer_Dism.stop()
+    #         $this.Visible = $False
+    #         $btn_windows_image.Visible = $true
+    #         Get-Job jobdism | stop-job
+    #         Get-Job jobdism | Remove-Job
+    #         Remove-Item Dism.log
+    #         $lb_percent.Text = "0%"
+    #         $ProgressBar.Value = 0
+    #         $lb_log.Text = "Limpeza Cancelada"
+    #         Start-Sleep -Seconds 1
+    #         $lb_log.Text = ""
+
+    #     })
+    # $btn_cancel_windows_image.Add_MouseEnter({ 
+    #         $btn_windows_image.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
+    #         $btn_windows_image.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#FFF")
+    #     })
+    # $btn_cancel_windows_image.Add_MouseLeave({ 
+
+    #         $btn_windows_image.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#FFF")
+    #         $btn_windows_image.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
+    #     })
 
 
-            $btn_cancel_windows_errors.Visible = $true
-            $btn_windows_errors.Visible = $False
-
-            $lb_log.text = 'Iniciando verificação do Windows...'
-            Start-Job -ScriptBlock {
+    # $btn_windows_errors.Add_Click({ 
 
 
-                Start-Process -FilePath "C:\Windows\System32\sfc.exe" -ArgumentList '/scannow' -Wait -NoNewWindow -RedirectStandardOutput sfc.log 
+    #         $btn_cancel_windows_errors.Visible = $true
+    #         $btn_windows_errors.Visible = $False
 
-            } -Name "jobsfc" -Verbose
-
-            $timer_sfc.Start()
-            $lb_log.Text = "Processando..."
-            $ProgressBar.Value = 0
-            $lb_percent.text = "0%"
-
-        })
-    $btn_windows_errors.Add_MouseEnter({ 
-            $btn_windows_errors.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#FFF")
-            $btn_windows_errors.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
-        })
-    $btn_windows_errors.Add_MouseLeave({ 
-            $btn_windows_errors.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
-            $btn_windows_errors.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#FFF")
-        })
+    #         $lb_log.text = 'Iniciando verificação do Windows...'
+    #         Start-Job -ScriptBlock {
 
 
-    $btn_cancel_windows_errors.Add_Click({ 
-            $btn_cancel_windows_errors.Visible = $false
-            $btn_windows_errors.Visible = $true
+    #             Start-Process -FilePath "C:\Windows\System32\sfc.exe" -ArgumentList '/scannow' -Wait -NoNewWindow -RedirectStandardOutput sfc.log 
 
-            $timer_sfc.Stop()
-            Get-Job jobsfc | Stop-Job
-            Get-Job jobsfc | Remove-Job
-            Remove-Item sfc.log
+    #         } -Name "jobsfc" -Verbose
 
-            $lb_percent.Text = "0%"
-            $ProgressBar.Value = 0
-            $lb_log.Text = "Correção de problemas cancelada"
-            Start-Sleep -Seconds 1
-            $lb_log.Text = ""
+    #         $timer_sfc.Start()
+    #         $lb_log.Text = "Processando..."
+    #         $ProgressBar.Value = 0
+    #         $lb_percent.text = "0%"
 
-        })
-    $btn_cancel_windows_errors.Add_MouseEnter({ 
-            $btn_cancel_windows_errors.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
-            $btn_cancel_windows_errors.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#FFF")
-        })
-    $btn_cancel_windows_errors.Add_MouseLeave({ 
+    #     })
+    # $btn_windows_errors.Add_MouseEnter({ 
+    #         $btn_windows_errors.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#FFF")
+    #         $btn_windows_errors.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
+    #     })
+    # $btn_windows_errors.Add_MouseLeave({ 
+    #         $btn_windows_errors.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
+    #         $btn_windows_errors.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#FFF")
+    #     })
 
-            $btn_cancel_windows_errors.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#FFF")
-            $btn_cancel_windows_errors.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
-        })
+
+    # $btn_cancel_windows_errors.Add_Click({ 
+    #         $btn_cancel_windows_errors.Visible = $false
+    #         $btn_windows_errors.Visible = $true
+
+    #         $timer_sfc.Stop()
+    #         Get-Job jobsfc | Stop-Job
+    #         Get-Job jobsfc | Remove-Job
+    #         Remove-Item sfc.log
+
+    #         $lb_percent.Text = "0%"
+    #         $ProgressBar.Value = 0
+    #         $lb_log.Text = "Correção de problemas cancelada"
+    #         Start-Sleep -Seconds 1
+    #         $lb_log.Text = ""
+
+    #     })
+    # $btn_cancel_windows_errors.Add_MouseEnter({ 
+    #         $btn_cancel_windows_errors.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
+    #         $btn_cancel_windows_errors.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#FFF")
+    #     })
+    # $btn_cancel_windows_errors.Add_MouseLeave({ 
+
+    #         $btn_cancel_windows_errors.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#FFF")
+    #         $btn_cancel_windows_errors.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
+    #     })
 
 
     $cancel_button.Add_Click({ 
@@ -1882,37 +2067,68 @@ function InitProgram {
         })
 
 
-    $btnDisableServices = New-Object System.Windows.Forms.Button
-    $btnDisableServices.Text = "DESATIVAR SERVIÇOS"
-    $btnDisableServices.Location = New-Object System.Drawing.Point(300, 330) # Ajuste conforme o layout
-    $btnDisableServices.Size = New-Object System.Drawing.Size(120, 30)
-    $btnDisableServices.Font = New-Object System.Drawing.Font('Arial Black', 7.3, [System.Drawing.FontStyle]::Bold)
-    $btnDisableServices.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#ffffff")
-    $btnDisableServices.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
+    # $btnDisableServices = New-Object System.Windows.Forms.Button
+    # $btnDisableServices.Text = "DESATIVAR SERVIÇOS"
+    # $btnDisableServices.Location = New-Object System.Drawing.Point(300, 330) # Ajuste conforme o layout
+    # $btnDisableServices.Size = New-Object System.Drawing.Size(120, 30)
+    # $btnDisableServices.Font = New-Object System.Drawing.Font('Arial Black', 7.3, [System.Drawing.FontStyle]::Bold)
+    # $btnDisableServices.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#ffffff")
+    # $btnDisableServices.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
         
-    $btnDisableServices.Add_MouseEnter({ 
-            $btnDisableServices.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#FFF")
-            $btnDisableServices.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
-        })
-    $btnDisableServices.Add_MouseLeave({ 
-            $btnDisableServices.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
-            $btnDisableServices.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#FFF")
-        })
+    # $btnDisableServices.Add_MouseEnter({ 
+    #         $btnDisableServices.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#FFF")
+    #         $btnDisableServices.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
+    #     })
+    # $btnDisableServices.Add_MouseLeave({ 
+    #         $btnDisableServices.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
+    #         $btnDisableServices.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#FFF")
+    #     })
         
-    $btnDisableServices.Add_Click({
-            $lb_log.Text = 'Desabilitando serviços de inicialização...'
-            try {
-                Disable_start_services
-                $lb_log.Text = 'Serviços de inicialização desativados.'
-                Write-Log "Ação direta: Serviços de inicialização desativados"
-            }
-            catch {
-                $lb_log.Text = "Erro ao desabilitar serviços: $($_.Exception.Message)"
-                Write-Log "Erro ao desabilitar serviços: $($_.Exception.Message)"
-            }
-        })
+    # $btnDisableServices.Add_Click({
+    #         $lb_log.Text = 'Desabilitando serviços de inicialização...'
+    #         try {
+    #             Disable_start_services
+    #             $lb_log.Text = 'Serviços de inicialização desativados.'
+    #             Write-Log "Ação direta: Serviços de inicialização desativados"
+    #         }
+    #         catch {
+    #             $lb_log.Text = "Erro ao desabilitar serviços: $($_.Exception.Message)"
+    #             Write-Log "Erro ao desabilitar serviços: $($_.Exception.Message)"
+    #         }
+    #     })
         
-    $suporte_GUI.Controls.Add($btnDisableServices)
+    # $btnDisableTelemetry = New-Object System.Windows.Forms.Button
+    # $btnDisableTelemetry.Text = "DESATIVAR TELEMETRIA"
+    # $btnDisableTelemetry.Location = New-Object System.Drawing.Point(430, 330)
+    # $btnDisableTelemetry.Size = New-Object System.Drawing.Size(120, 30)
+    # $btnDisableTelemetry.Font = New-Object System.Drawing.Font('Arial Black', 7.3, [System.Drawing.FontStyle]::Bold)
+    # $btnDisableTelemetry.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#ffffff")
+    # $btnDisableTelemetry.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
+
+    # $btnDisableTelemetry.Add_MouseEnter({ 
+    #         $btnDisableTelemetry.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#FFF")
+    #         $btnDisableTelemetry.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
+    #     })
+    # $btnDisableTelemetry.Add_MouseLeave({ 
+    #         $btnDisableTelemetry.BackColor = [System.Drawing.ColorTranslator]::FromHtml("#121212")
+    #         $btnDisableTelemetry.ForeColor = [System.Drawing.ColorTranslator]::FromHtml("#FFF")
+    #     })
+
+    # $btnDisableTelemetry.Add_Click({
+    #         $lb_log.Text = 'Desabilitando telemetria...'
+    #         try {
+    #             Disable_telemetry
+    #             $lb_log.Text = 'Telemetria desativada.'
+    #             Write-Log "Ação direta: Telemetria desativada"
+    #         }
+    #         catch {
+    #             $lb_log.Text = "Erro ao desabilitar telemetria: $($_.Exception.Message)"
+    #             Write-Log "Erro ao desabilitar telemetria: $($_.Exception.Message)"
+    #         }
+    #     })
+
+    # $InterfaceProgram.Controls.Add($btnDisableTelemetry)
+    # $InterfaceProgram.Controls.Add($btnDisableServices)
 
     $InterfaceProgram.Refresh()
     [void]$InterfaceProgram.ShowDialog()
